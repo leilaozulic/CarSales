@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "cars",
+@Table(
         indexes = {
                 @Index(columnList = "VIN", unique = true)
         })

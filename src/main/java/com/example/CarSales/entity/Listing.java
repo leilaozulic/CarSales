@@ -7,7 +7,6 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
-@Table(name = "listings")
 public class Listing {
 
     // Listing

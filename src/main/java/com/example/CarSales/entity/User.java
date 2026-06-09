@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
-@Table(name = "users",
+@Table(
         indexes = {
                 @Index(columnList = "username", unique = true)
         })

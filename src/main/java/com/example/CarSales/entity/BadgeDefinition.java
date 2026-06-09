@@ -3,14 +3,10 @@ package com.example.CarSales.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
 import java.sql.Timestamp;
 
 @Entity
-@Table(
-        name = "badge_definition"
-)
 public class BadgeDefinition {
 
     // BadgeDefinition

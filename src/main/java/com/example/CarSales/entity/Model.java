@@ -1,9 +1,11 @@
 package com.example.CarSales.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
 @Entity
-@Table(name = "model")
 public class Model {
 
     // Model

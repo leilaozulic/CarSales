@@ -1,11 +1,13 @@
 package com.example.CarSales.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "rating")
 public class Rating {
 
     // Rating

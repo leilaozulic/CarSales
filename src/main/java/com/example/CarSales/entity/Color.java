@@ -3,10 +3,9 @@ package com.example.CarSales.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "color")
+
 public class Color {
 
     // Color
