@@ -8,7 +8,8 @@ import java.util.List;
 @Entity
 @Table(
         indexes = {
-                @Index(columnList = "username", unique = true)
+                @Index(columnList = "username", unique = true),
+                @Index(columnList = "email", unique = true)
         })
 public class User {
 

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0"
+          name="viewport">
+    <title>Login</title>
+</head>
+<body>
+
+<h1>Sign in</h1>
+
+<p th:if="${param.error}">
+    Invalid email or password.
+</p>
+
+<p th:if="${param.logout}">
+    You have been logged out.
+</p>
+
+<form method="post" th:action="@{/login}">  <!-- from security config:...  .loginProcessingUrl("/login") ...-->
+
+    <input th:name="${_csrf.parameterName}"
+           th:value="${_csrf.token}"
+           type="hidden">
+
+    <label for="email">Email</label>
+    <input autocomplete="username"
+           id="email"
+           name="email"
+           required
+           type="email">
+
+    <label for="password">Password</label>
+    <input autocomplete="current-password"
+           id="password"
+           name="password"
+           required
+           type="password">
+
+    <button type="submit">Sign in</button>
+
+</form>
+
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Create Account</title>
+</head>
+<body>
+
+<h1>Create an account</h1>
+
+<form method="post" th:action="@{/signup}">
+
+    <input th:name="${_csrf.parameterName}"
+           th:value="${_csrf.token}"
+           type="hidden">
+
+    <div>
+        <label for="username">Username</label>
+        <input autocomplete="username"
+               id="username"
+               name="username"
+               required
+               type="text">
+    </div>
+
+    <div>
+        <label for="email">Email</label>
+        <input autocomplete="email"
+               id="email"
+               name="email"
+               required
+               type="email">
+    </div>
+
+    <div>
+        <label for="password">Password</label>
+        <input autocomplete="new-password"
+               id="password"
+               minlength="8"
+               name="password"
+               required
+               type="password">
+    </div>
+
+    <button type="submit">Create account</button>
+
+</form>
+
+<p>
+    Already have an account?
+    <a th:href="@{/login}">Sign in</a>
+</p>
+
+</body>
+</html>
