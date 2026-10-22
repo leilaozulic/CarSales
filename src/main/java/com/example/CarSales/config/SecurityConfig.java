@@ -26,6 +26,7 @@ public class SecurityConfig {
                         .requestMatchers(                                         //configuring auth rules for HTTP requests
                                 "/",
                                 "/login",
+                                "/signup",
                                 "/assets/**",
                                 "/favicon.ico"
                         ).permitAll()                                             //these domains are public and we don't require user to be logged in for them

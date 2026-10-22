@@ -1,5 +1,6 @@
 package com.example.CarSales.entity;
 
+import com.example.CarSales.enums.UserStatus;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
@@ -7,20 +8,20 @@ import java.util.List;
 
 @Entity
 @Table(
+        name = "application_user",
         indexes = {
                 @Index(columnList = "username", unique = true),
                 @Index(columnList = "email", unique = true)
-        })
+        }
+)
 public class User {
 
     // User
     @Id
     @GeneratedValue
     private Integer id;
-
     private String username;
     private String email;
-
     @ManyToMany(mappedBy = "applicationUsers")
     private List<Listing> favoriteListings;
     private String password_hash;
@@ -28,13 +29,17 @@ public class User {
     private String last_name;
     private String phone_number;
     private String profile_image_url;
-    private String status;
-
-    private Boolean is_verified;
+    private UserStatus status;
     private Boolean is_dealer;
-
     private Timestamp created_at;
     private Timestamp updated_at;
+
+    public User(String username, String email, String password_hash, UserStatus status) {
+        this.username = username;
+        this.email = email;
+        this.password_hash = password_hash;
+        this.status = status;
+    }
 
     public User() {
     }
@@ -103,20 +108,12 @@ public class User {
         this.profile_image_url = profile_image_url;
     }
 
-    public String getStatus() {
+    public UserStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(UserStatus status) {
         this.status = status;
-    }
-
-    public Boolean getIs_verified() {
-        return is_verified;
-    }
-
-    public void setIs_verified(Boolean is_verified) {
-        this.is_verified = is_verified;
     }
 
     public Boolean getIs_dealer() {

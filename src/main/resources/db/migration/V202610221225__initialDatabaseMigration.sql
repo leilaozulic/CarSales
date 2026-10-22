@@ -1,3 +1,5 @@
+CREATE SEQUENCE IF NOT EXISTS application_user_seq START WITH 1 INCREMENT BY 50;
+
 CREATE SEQUENCE IF NOT EXISTS badge_definition_seq START WITH 1 INCREMENT BY 50;
 
 CREATE SEQUENCE IF NOT EXISTS car_seq START WITH 1 INCREMENT BY 50;
@@ -30,7 +32,23 @@ CREATE SEQUENCE IF NOT EXISTS report_seq START WITH 1 INCREMENT BY 50;
 
 CREATE SEQUENCE IF NOT EXISTS user_badge_seq START WITH 1 INCREMENT BY 50;
 
-CREATE SEQUENCE IF NOT EXISTS user_seq START WITH 1 INCREMENT BY 50;
+CREATE TABLE application_user
+(
+    id                INTEGER NOT NULL,
+    username          VARCHAR(255),
+    email             VARCHAR(255),
+    password_hash     VARCHAR(255),
+    first_name        VARCHAR(255),
+    last_name         VARCHAR(255),
+    phone_number      VARCHAR(255),
+    profile_image_url VARCHAR(255),
+    status            SMALLINT,
+    is_verified       BOOLEAN,
+    is_dealer         BOOLEAN,
+    created_at        TIMESTAMP WITHOUT TIME ZONE,
+    updated_at        TIMESTAMP WITHOUT TIME ZONE,
+    CONSTRAINT pk_application_user PRIMARY KEY (id)
+);
 
 CREATE TABLE badge_definition
 (
@@ -229,24 +247,6 @@ CREATE TABLE report
     CONSTRAINT pk_report PRIMARY KEY (id)
 );
 
-CREATE TABLE "user"
-(
-    id                INTEGER NOT NULL,
-    username          VARCHAR(255),
-    email             VARCHAR(255),
-    password_hash     VARCHAR(255),
-    first_name        VARCHAR(255),
-    last_name         VARCHAR(255),
-    phone_number      VARCHAR(255),
-    profile_image_url VARCHAR(255),
-    status            VARCHAR(255),
-    is_verified       BOOLEAN,
-    is_dealer         BOOLEAN,
-    created_at        TIMESTAMP WITHOUT TIME ZONE,
-    updated_at        TIMESTAMP WITHOUT TIME ZONE,
-    CONSTRAINT pk_user PRIMARY KEY (id)
-);
-
 CREATE TABLE user_badge
 (
     id                  INTEGER NOT NULL,
@@ -258,7 +258,9 @@ CREATE TABLE user_badge
 
 CREATE UNIQUE INDEX idx_4e69555ed4000171717ac7748 ON car (vin);
 
-CREATE UNIQUE INDEX idx_ea3c6abe1998db9734bcd155c ON "user" (username);
+CREATE UNIQUE INDEX idx_5dda7c4a851b9d51b1d788679 ON application_user (username);
+
+CREATE UNIQUE INDEX idx_e2740a38df7c2d077a49fb5e3 ON application_user (email);
 
 ALTER TABLE car
     ADD CONSTRAINT FK_CAR_ON_COLOR_ID FOREIGN KEY (color_id_id) REFERENCES color (id);
@@ -267,13 +269,13 @@ ALTER TABLE car
     ADD CONSTRAINT FK_CAR_ON_MODEL_ID FOREIGN KEY (model_id_id) REFERENCES model (id);
 
 ALTER TABLE conversation
-    ADD CONSTRAINT FK_CONVERSATION_ON_BUYER_ID FOREIGN KEY (buyer_id_id) REFERENCES "user" (id);
+    ADD CONSTRAINT FK_CONVERSATION_ON_BUYER_ID FOREIGN KEY (buyer_id_id) REFERENCES application_user (id);
 
 ALTER TABLE conversation
     ADD CONSTRAINT FK_CONVERSATION_ON_LISTING_ID FOREIGN KEY (listing_id_id) REFERENCES listing (id);
 
 ALTER TABLE conversation
-    ADD CONSTRAINT FK_CONVERSATION_ON_SELLER_ID FOREIGN KEY (seller_id_id) REFERENCES "user" (id);
+    ADD CONSTRAINT FK_CONVERSATION_ON_SELLER_ID FOREIGN KEY (seller_id_id) REFERENCES application_user (id);
 
 ALTER TABLE image
     ADD CONSTRAINT FK_IMAGE_ON_LISTING_ID FOREIGN KEY (listing_id_id) REFERENCES listing (id);
@@ -288,7 +290,7 @@ ALTER TABLE listing
     ADD CONSTRAINT FK_LISTING_ON_LOCATION_ID FOREIGN KEY (location_id_id) REFERENCES location (id);
 
 ALTER TABLE listing
-    ADD CONSTRAINT FK_LISTING_ON_SELLER_ID FOREIGN KEY (seller_id_id) REFERENCES "user" (id);
+    ADD CONSTRAINT FK_LISTING_ON_SELLER_ID FOREIGN KEY (seller_id_id) REFERENCES application_user (id);
 
 ALTER TABLE message_attachment
     ADD CONSTRAINT FK_MESSAGEATTACHMENT_ON_MESSAGE_ID FOREIGN KEY (message_id_id) REFERENCES message (id);
@@ -300,25 +302,25 @@ ALTER TABLE model
     ADD CONSTRAINT FK_MODEL_ON_MAKE_ID FOREIGN KEY (make_id_id) REFERENCES make (id);
 
 ALTER TABLE notification
-    ADD CONSTRAINT FK_NOTIFICATION_ON_USER_ID FOREIGN KEY (user_id_id) REFERENCES "user" (id);
+    ADD CONSTRAINT FK_NOTIFICATION_ON_USER_ID FOREIGN KEY (user_id_id) REFERENCES application_user (id);
 
 ALTER TABLE rating
-    ADD CONSTRAINT FK_RATING_ON_RATED_USER_ID FOREIGN KEY (rated_user_id_id) REFERENCES "user" (id);
+    ADD CONSTRAINT FK_RATING_ON_RATED_USER_ID FOREIGN KEY (rated_user_id_id) REFERENCES application_user (id);
 
 ALTER TABLE rating
-    ADD CONSTRAINT FK_RATING_ON_RATER_ID FOREIGN KEY (rater_id_id) REFERENCES "user" (id);
+    ADD CONSTRAINT FK_RATING_ON_RATER_ID FOREIGN KEY (rater_id_id) REFERENCES application_user (id);
 
 ALTER TABLE report
     ADD CONSTRAINT FK_REPORT_ON_LISTING_ID FOREIGN KEY (listing_id_id) REFERENCES listing (id);
 
 ALTER TABLE report
-    ADD CONSTRAINT FK_REPORT_ON_USER_ID FOREIGN KEY (user_id_id) REFERENCES "user" (id);
+    ADD CONSTRAINT FK_REPORT_ON_USER_ID FOREIGN KEY (user_id_id) REFERENCES application_user (id);
 
 ALTER TABLE user_badge
-    ADD CONSTRAINT FK_USERBADGE_ON_USER_ID FOREIGN KEY (user_id_id) REFERENCES "user" (id);
+    ADD CONSTRAINT FK_USERBADGE_ON_USER_ID FOREIGN KEY (user_id_id) REFERENCES application_user (id);
 
 ALTER TABLE listing_application_users
     ADD CONSTRAINT fk_lisappuse_on_listing FOREIGN KEY (favorite_listings_id) REFERENCES listing (id);
 
 ALTER TABLE listing_application_users
-    ADD CONSTRAINT fk_lisappuse_on_user FOREIGN KEY (application_users_id) REFERENCES "user" (id);
+    ADD CONSTRAINT fk_lisappuse_on_user FOREIGN KEY (application_users_id) REFERENCES application_user (id);
