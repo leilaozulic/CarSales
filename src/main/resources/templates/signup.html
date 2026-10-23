@@ -3,54 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Create Account</title>
+    <title>Create an account | CarSales</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
 
-<h1>Create an account</h1>
-
-<form method="post" th:action="@{/signup}">
-
-    <input th:name="${_csrf.parameterName}"
-           th:value="${_csrf.token}"
-           type="hidden">
-
-    <div>
-        <label for="username">Username</label>
-        <input autocomplete="username"
-               id="username"
-               name="username"
-               required
-               type="text">
+<header class="navbar">
+    <div class="container nav-inner">
+        <a class="brand" th:href="@{/}">
+            <span class="brand-mark">C</span>
+            CarSales
+        </a>
+        <a class="btn btn-outline" th:href="@{/login}">
+            Already a member?
+        </a>
     </div>
+</header>
 
-    <div>
-        <label for="email">Email</label>
-        <input autocomplete="email"
-               id="email"
-               name="email"
-               required
-               type="email">
+<main class="auth-page">
+    <section class="auth-card auth-card-wide">
+        <div class="auth-heading">
+            <div class="brand-mark">C</div>
+            <h1>Find your next drive.</h1>
+            <p>Create your CarSales account. It only takes a minute.</p>
+        </div>
+
+        <div class="alert alert-error"
+             th:if="${param.error}">
+            We couldn't create your account. Please check your details and try again.
+        </div>
+
+        <form method="post" th:action="@{/signup}">
+            <div class="form-group">
+                <label class="form-label" for="username">
+                    Username
+                </label>
+                <input autocomplete="username"
+                       class="form-input"
+                       id="username"
+                       minlength="3"
+                       name="username"
+                       placeholder="Choose a username"
+                       required
+                       type="text">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="email">
+                    Email address
+                </label>
+                <input autocomplete="email"
+                       class="form-input"
+                       id="email"
+                       name="email"
+                       placeholder="you@example.com"
+                       required
+                       type="email">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="password">
+                    Password
+                </label>
+                <input autocomplete="new-password"
+                       class="form-input"
+                       id="password"
+                       minlength="8"
+                       name="password"
+                       placeholder="Create a strong password"
+                       required
+                       type="password">
+                <p class="form-help">
+                    Use at least 8 characters. Choose a password you don't
+                    use on other websites.
+                </p>
+            </div>
+
+            <button class="btn btn-primary btn-full" type="submit">
+                Create my account &rarr;
+            </button>
+        </form>
+
+        <p class="auth-switch">
+            Already have an account?
+            <a th:href="@{/login}">Log in</a>
+        </p>
+
+        <p class="auth-switch">
+            <a th:href="@{/}">← Back to homepage</a>
+        </p>
+    </section>
+</main>
+
+<footer class="footer">
+    <div class="container footer-inner">
+        <span>© 2026 CarSales</span>
+        <span>Made for the road ahead.</span>
     </div>
-
-    <div>
-        <label for="password">Password</label>
-        <input autocomplete="new-password"
-               id="password"
-               minlength="8"
-               name="password"
-               required
-               type="password">
-    </div>
-
-    <button type="submit">Create account</button>
-
-</form>
-
-<p>
-    Already have an account?
-    <a th:href="@{/login}">Sign in</a>
-</p>
+</footer>
 
 </body>
 </html>

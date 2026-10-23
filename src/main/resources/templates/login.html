@@ -2,45 +2,92 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta content="width=device-width, initial-scale=1.0"
-          name="viewport">
-    <title>Login</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Log in | CarSales</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
 
-<h1>Sign in</h1>
+<header class="navbar">
+    <div class="container nav-inner">
+        <a class="brand" th:href="@{/}">
+            <span class="brand-mark">C</span>
+            CarSales
+        </a>
+        <a class="btn btn-outline" th:href="@{/signup}">
+            Create account
+        </a>
+    </div>
+</header>
 
-<p th:if="${param.error}">
-    Invalid email or password.
-</p>
+<main class="auth-page">
+    <section class="auth-card">
+        <div class="auth-heading">
+            <div class="brand-mark">C</div>
+            <h1>Welcome back.</h1>
+            <p>Sign in to continue your CarSales journey.</p>
+        </div>
 
-<p th:if="${param.logout}">
-    You have been logged out.
-</p>
+        <div class="alert alert-error"
+             th:if="${param.error}">
+            Your username or password is incorrect. Please try again.
+        </div>
 
-<form method="post" th:action="@{/login}">  <!-- from security config:...  .loginProcessingUrl("/login") ...-->
+        <div class="alert alert-success"
+             th:if="${param.logout}">
+            You have been logged out successfully.
+        </div>
 
-    <input th:name="${_csrf.parameterName}"
-           th:value="${_csrf.token}"
-           type="hidden">
+        <form method="post" th:action="@{/login}">
+            <div class="form-group">
+                <label class="form-label" for="username">
+                    Username
+                </label>
+                <input autocomplete="username"
+                       autofocus
+                       class="form-input"
+                       id="username"
+                       name="username"
+                       placeholder="Enter your username"
+                       required
+                       type="text">
+            </div>
 
-    <label for="email">Email</label>
-    <input autocomplete="username"
-           id="email"
-           name="email"
-           required
-           type="email">
+            <div class="form-group">
+                <label class="form-label" for="password">
+                    Password
+                </label>
+                <input autocomplete="current-password"
+                       class="form-input"
+                       id="password"
+                       name="password"
+                       placeholder="Enter your password"
+                       required
+                       type="password">
+            </div>
 
-    <label for="password">Password</label>
-    <input autocomplete="current-password"
-           id="password"
-           name="password"
-           required
-           type="password">
+            <button class="btn btn-primary btn-full" type="submit">
+                Log in &rarr;
+            </button>
+        </form>
 
-    <button type="submit">Sign in</button>
+        <p class="auth-switch">
+            New to CarSales?
+            <a th:href="@{/signup}">Create an account</a>
+        </p>
 
-</form>
+        <p class="auth-switch">
+            <a th:href="@{/}">← Back to homepage</a>
+        </p>
+    </section>
+</main>
+
+<footer class="footer">
+    <div class="container footer-inner">
+        <span>© 2026 CarSales</span>
+        <span>Made for the road ahead.</span>
+    </div>
+</footer>
 
 </body>
 </html>

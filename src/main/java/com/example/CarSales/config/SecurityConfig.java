@@ -29,6 +29,7 @@ public class SecurityConfig {
                                 "/signup",
                                 "/verify-email",
                                 "/assets/**",
+                                "/css/**",
                                 "/favicon.ico"
                         ).permitAll()                                             //these domains are public and we don't require user to be logged in for them
                         .anyRequest().authenticated()                             // all other requests need to be authenticated

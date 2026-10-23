@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>CarSales | Find your next car</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="container nav-inner">
+        <a class="brand" th:href="@{/}">
+            <span class="brand-mark">C</span>
+            CarSales
+        </a>
+
+        <nav aria-label="Main navigation" class="nav-actions">
+            <a class="btn btn-outline" th:href="@{/login}">Log in</a>
+            <a class="btn btn-primary" th:href="@{/signup}">Get started &rarr;</a>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <section class="hero">
+        <div class="container hero-grid">
+            <div>
+                <div class="eyebrow">
+                    <span class="eyebrow-dot"></span>
+                    YOUR NEXT JOURNEY STARTS HERE
+                </div>
+
+                <h1>Find the car that <span>moves you.</span></h1>
+
+                <p class="hero-copy">
+                    Discover your next car with confidence. Explore vehicles,
+                    connect with sellers, and make your next move with CarSales.
+                </p>
+
+                <div class="hero-actions">
+                    <a class="btn btn-primary" th:href="@{/signup}">
+                        Create your account &rarr;
+                    </a>
+                    <a class="btn btn-outline" th:href="@{/login}">
+                        I already have an account
+                    </a>
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <img
+                        alt="Sports car on a scenic road"
+                        class="hero-car"
+                        src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=85">
+                <div class="hero-caption">
+                    Your next chapter has four wheels.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <div class="section-heading">
+                <div class="eyebrow">THE CARSALEs EXPERIENCE</div>
+                <h2>A better way to find your next car.</h2>
+                <p>
+                    Whether you know exactly what you want or you're still
+                    exploring, your journey starts here.
+                </p>
+            </div>
+
+            <div class="feature-grid">
+                <article class="feature-card">
+                    <div aria-hidden="true" class="feature-icon">⌕</div>
+                    <h3>Explore your options</h3>
+                    <p>
+                        Browse vehicles and discover possibilities for your
+                        next journey.
+                    </p>
+                </article>
+
+                <article class="feature-card">
+                    <div aria-hidden="true" class="feature-icon">↔</div>
+                    <h3>Connect with sellers</h3>
+                    <p>
+                        Find a vehicle that fits your needs and get in touch
+                        to learn more.
+                    </p>
+                </article>
+
+                <article class="feature-card">
+                    <div aria-hidden="true" class="feature-icon">♡</div>
+                    <h3>Keep your favorites close</h3>
+                    <p>
+                        Create an account and keep track of the vehicles
+                        you're interested in.
+                    </p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" style="background: var(--navy);">
+        <div class="container section-heading">
+            <div class="eyebrow" style="color: var(--orange);">
+                READY WHEN YOU ARE
+            </div>
+            <h2 style="color: white;">Your next car is out there.</h2>
+            <p style="color: #c9d0da;">
+                Join CarSales and start exploring your options.
+            </p>
+            <div class="hero-actions" style="justify-content: center;">
+                <a class="btn btn-primary" th:href="@{/signup}">
+                    Join CarSales &rarr;
+                </a>
+                <a class="btn btn-outline"
+                   style="color: white; border-color: #526075;"
+                   th:href="@{/login}">
+                    Log in
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <div class="container footer-inner">
+        <span>© 2026 CarSales</span>
+        <span>Made for the road ahead.</span>
+    </div>
+</footer>
+
+</body>
+</html>
