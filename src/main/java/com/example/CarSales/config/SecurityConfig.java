@@ -27,6 +27,7 @@ public class SecurityConfig {
                                 "/",
                                 "/login",
                                 "/signup",
+                                "/verify-email",
                                 "/assets/**",
                                 "/favicon.ico"
                         ).permitAll()                                             //these domains are public and we don't require user to be logged in for them
