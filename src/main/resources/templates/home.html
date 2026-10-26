@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -7,20 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-
-<header class="navbar">
-    <div class="container nav-inner">
-        <a class="brand" th:href="@{/}">
-            <span class="brand-mark">C</span>
-            CarSales
-        </a>
-
-        <nav aria-label="Main navigation" class="nav-actions">
-            <a class="btn btn-outline" th:href="@{/login}">Log in</a>
-            <a class="btn btn-primary" th:href="@{/signup}">Get started &rarr;</a>
-        </nav>
-    </div>
-</header>
+<div th:replace="~{fragments/layout :: header}"></div>
 
 <main>
     <section class="hero">
@@ -124,13 +112,6 @@
         </div>
     </section>
 </main>
-
-<footer class="footer">
-    <div class="container footer-inner">
-        <span>© 2026 CarSales</span>
-        <span>Made for the road ahead.</span>
-    </div>
-</footer>
-
+<div th:replace="~{fragments/layout :: footer}"></div>
 </body>
 </html>

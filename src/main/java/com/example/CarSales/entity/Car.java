@@ -7,58 +7,67 @@ import java.sql.Timestamp;
 @Entity
 @Table(
         indexes = {
-                @Index(columnList = "VIN", unique = true)
-        })
+                @Index(name = "idx_car_vin", columnList = "vin", unique = true),
+                @Index(name = "idx_car_model_id", columnList = "model_id"),
+                @Index(name = "idx_car_color_id", columnList = "color_id")
+        }
+)
 public class Car {
 
-    // Car
     @Id
     @GeneratedValue
     private Integer id;
 
     @ManyToOne
-    private Model model_id;
+    @JoinColumn(name = "model_id")
+    private Model model;
 
     @ManyToOne
-    private Color color_id;
+    @JoinColumn(name = "color_id")
+    private Color color;
+
     private Integer year;
     private Integer mileage;
-    private String fuel_type;
+
+    private String fuelType;
     private String transmission;
-    private String drive_type;
-    private String body_type;
-    private Integer engine_power_hp;
-    private String engine_size;
-    private String seat_material;
-    private String seat_adjustment;
-    private String headlight_type;
-    private String climate_control_type;
-    private String parking_assistance_level;
+    private String driveType;
+    private String bodyType;
 
-    private Long VIN;
+    private Integer enginePowerHp;
+    private String engineSize;
 
-    private Boolean has_navigation;
-    private Boolean has_bluetooth;
-    private Boolean has_apple_carplay;
-    private Boolean has_android_auto;
-    private Boolean has_cruise_control;
-    private Boolean has_adaptive_cruise_control;
-    private Boolean has_lane_assist;
-    private Boolean has_blind_spot_monitor;
-    private Boolean has_heated_seats;
-    private Boolean has_ventilated_seats;
-    private Boolean has_sunroof;
-    private Boolean has_panorama_roof;
-    private Boolean has_keyless_entry;
-    private Boolean has_push_start;
-    private Boolean has_alloy_wheels;
-    private Boolean has_abs;
-    private Boolean has_esp;
+    private String seatMaterial;
+    private String seatAdjustment;
+    private String headlightType;
+    private String climateControlType;
+    private String parkingAssistanceLevel;
+
+    @Column(name = "vin", length = 17, unique = true)
+    private String vin;
+
+    private Boolean hasNavigation;
+    private Boolean hasBluetooth;
+    private Boolean hasAppleCarplay;
+    private Boolean hasAndroidAuto;
+    private Boolean hasCruiseControl;
+    private Boolean hasAdaptiveCruiseControl;
+    private Boolean hasLaneAssist;
+    private Boolean hasBlindSpotMonitor;
+    private Boolean hasHeatedSeats;
+    private Boolean hasVentilatedSeats;
+    private Boolean hasSunroof;
+    private Boolean hasPanoramaRoof;
+    private Boolean hasKeylessEntry;
+    private Boolean hasPushStart;
+    private Boolean hasAlloyWheels;
+    private Boolean hasAbs;
+    private Boolean hasEsp;
 
     private String description;
 
-    private java.sql.Timestamp created_at;
-    private java.sql.Timestamp updated_at;
+    private Timestamp createdAt;
+    private Timestamp updatedAt;
 
     public Car() {
     }
@@ -71,20 +80,20 @@ public class Car {
         this.id = id;
     }
 
-    public Long getVIN() {
-        return VIN;
+    public Model getModel() {
+        return model;
     }
 
-    public void setVIN(Long VIN) {
-        this.VIN = VIN;
+    public void setModel(Model model) {
+        this.model = model;
     }
 
-    public Model getModel_id() {
-        return model_id;
+    public Color getColor() {
+        return color;
     }
 
-    public void setModel_id(Model model_id) {
-        this.model_id = model_id;
+    public void setColor(Color color) {
+        this.color = color;
     }
 
     public Integer getYear() {
@@ -95,14 +104,6 @@ public class Car {
         this.year = year;
     }
 
-    public Color getColor_id() {
-        return color_id;
-    }
-
-    public void setColor_id(Color color_id) {
-        this.color_id = color_id;
-    }
-
     public Integer getMileage() {
         return mileage;
     }
@@ -111,12 +112,12 @@ public class Car {
         this.mileage = mileage;
     }
 
-    public String getFuel_type() {
-        return fuel_type;
+    public String getFuelType() {
+        return fuelType;
     }
 
-    public void setFuel_type(String fuel_type) {
-        this.fuel_type = fuel_type;
+    public void setFuelType(String fuelType) {
+        this.fuelType = fuelType;
     }
 
     public String getTransmission() {
@@ -127,204 +128,220 @@ public class Car {
         this.transmission = transmission;
     }
 
-    public String getDrive_type() {
-        return drive_type;
+    public String getDriveType() {
+        return driveType;
     }
 
-    public void setDrive_type(String drive_type) {
-        this.drive_type = drive_type;
+    public void setDriveType(String driveType) {
+        this.driveType = driveType;
     }
 
-    public String getBody_type() {
-        return body_type;
+    public String getBodyType() {
+        return bodyType;
     }
 
-    public void setBody_type(String body_type) {
-        this.body_type = body_type;
+    public void setBodyType(String bodyType) {
+        this.bodyType = bodyType;
     }
 
-    public Integer getEngine_power_hp() {
-        return engine_power_hp;
+    public Integer getEnginePowerHp() {
+        return enginePowerHp;
     }
 
-    public void setEngine_power_hp(Integer engine_power_hp) {
-        this.engine_power_hp = engine_power_hp;
+    public void setEnginePowerHp(Integer enginePowerHp) {
+        this.enginePowerHp = enginePowerHp;
     }
 
-    public String getEngine_size() {
-        return engine_size;
+    public String getEngineSize() {
+        return engineSize;
     }
 
-    public void setEngine_size(String engine_size) {
-        this.engine_size = engine_size;
+    public void setEngineSize(String engineSize) {
+        this.engineSize = engineSize;
     }
 
-    public String getSeat_material() {
-        return seat_material;
+    public String getSeatMaterial() {
+        return seatMaterial;
     }
 
-    public void setSeat_material(String seat_material) {
-        this.seat_material = seat_material;
+    public void setSeatMaterial(String seatMaterial) {
+        this.seatMaterial = seatMaterial;
     }
 
-    public String getSeat_adjustment() {
-        return seat_adjustment;
+    public String getSeatAdjustment() {
+        return seatAdjustment;
     }
 
-    public void setSeat_adjustment(String seat_adjustment) {
-        this.seat_adjustment = seat_adjustment;
+    public void setSeatAdjustment(String seatAdjustment) {
+        this.seatAdjustment = seatAdjustment;
     }
 
-    public String getHeadlight_type() {
-        return headlight_type;
+    public String getHeadlightType() {
+        return headlightType;
     }
 
-    public void setHeadlight_type(String headlight_type) {
-        this.headlight_type = headlight_type;
+    public void setHeadlightType(String headlightType) {
+        this.headlightType = headlightType;
     }
 
-    public String getClimate_control_type() {
-        return climate_control_type;
+    public String getClimateControlType() {
+        return climateControlType;
     }
 
-    public void setClimate_control_type(String climate_control_type) {
-        this.climate_control_type = climate_control_type;
+    public void setClimateControlType(String climateControlType) {
+        this.climateControlType = climateControlType;
     }
 
-    public String getParking_assistance_level() {
-        return parking_assistance_level;
+    public String getParkingAssistanceLevel() {
+        return parkingAssistanceLevel;
     }
 
-    public void setParking_assistance_level(String parking_assistance_level) {
-        this.parking_assistance_level = parking_assistance_level;
+    public void setParkingAssistanceLevel(String parkingAssistanceLevel) {
+        this.parkingAssistanceLevel = parkingAssistanceLevel;
     }
 
-    public Boolean getHas_navigation() {
-        return has_navigation;
+    public String getVin() {
+        return vin;
     }
 
-    public void setHas_navigation(Boolean has_navigation) {
-        this.has_navigation = has_navigation;
+    public void setVin(String vin) {
+        this.vin = vin;
     }
 
-    public Boolean getHas_bluetooth() {
-        return has_bluetooth;
+    public Boolean getHasNavigation() {
+        return hasNavigation;
     }
 
-    public void setHas_bluetooth(Boolean has_bluetooth) {
-        this.has_bluetooth = has_bluetooth;
+    public void setHasNavigation(Boolean hasNavigation) {
+        this.hasNavigation = hasNavigation;
     }
 
-    public Boolean getHas_apple_carplay() {
-        return has_apple_carplay;
+    public Boolean getHasBluetooth() {
+        return hasBluetooth;
     }
 
-    public void setHas_apple_carplay(Boolean has_apple_carplay) {
-        this.has_apple_carplay = has_apple_carplay;
+    public void setHasBluetooth(Boolean hasBluetooth) {
+        this.hasBluetooth = hasBluetooth;
     }
 
-    public Boolean getHas_android_auto() {
-        return has_android_auto;
+    public Boolean getHasAppleCarplay() {
+        return hasAppleCarplay;
     }
 
-    public void setHas_android_auto(Boolean has_android_auto) {
-        this.has_android_auto = has_android_auto;
+    public void setHasAppleCarplay(Boolean hasAppleCarplay) {
+        this.hasAppleCarplay = hasAppleCarplay;
     }
 
-    public Boolean getHas_cruise_control() {
-        return has_cruise_control;
+    public Boolean getHasAndroidAuto() {
+        return hasAndroidAuto;
     }
 
-    public void setHas_cruise_control(Boolean has_cruise_control) {
-        this.has_cruise_control = has_cruise_control;
+    public void setHasAndroidAuto(Boolean hasAndroidAuto) {
+        this.hasAndroidAuto = hasAndroidAuto;
     }
 
-    public Boolean getHas_adaptive_cruise_control() {
-        return has_adaptive_cruise_control;
+    public Boolean getHasCruiseControl() {
+        return hasCruiseControl;
     }
 
-    public void setHas_adaptive_cruise_control(Boolean has_adaptive_cruise_control) {
-        this.has_adaptive_cruise_control = has_adaptive_cruise_control;
+    public void setHasCruiseControl(Boolean hasCruiseControl) {
+        this.hasCruiseControl = hasCruiseControl;
     }
 
-    public Boolean getHas_lane_assist() {
-        return has_lane_assist;
+    public Boolean getHasAdaptiveCruiseControl() {
+        return hasAdaptiveCruiseControl;
     }
 
-    public void setHas_lane_assist(Boolean has_lane_assist) {
-        this.has_lane_assist = has_lane_assist;
+    public void setHasAdaptiveCruiseControl(Boolean hasAdaptiveCruiseControl) {
+        this.hasAdaptiveCruiseControl = hasAdaptiveCruiseControl;
     }
 
-    public Boolean getHas_blind_spot_monitor() {
-        return has_blind_spot_monitor;
+    public Boolean getHasLaneAssist() {
+        return hasLaneAssist;
     }
 
-    public void setHas_blind_spot_monitor(Boolean has_blind_spot_monitor) {
-        this.has_blind_spot_monitor = has_blind_spot_monitor;
+    public void setHasLaneAssist(Boolean hasLaneAssist) {
+        this.hasLaneAssist = hasLaneAssist;
     }
 
-    public Boolean getHas_heated_seats() {
-        return has_heated_seats;
+    public Boolean getHasBlindSpotMonitor() {
+        return hasBlindSpotMonitor;
     }
 
-    public void setHas_heated_seats(Boolean has_heated_seats) {
-        this.has_heated_seats = has_heated_seats;
+    public void setHasBlindSpotMonitor(Boolean hasBlindSpotMonitor) {
+        this.hasBlindSpotMonitor = hasBlindSpotMonitor;
     }
 
-    public Boolean getHas_sunroof() {
-        return has_sunroof;
+    public Boolean getHasHeatedSeats() {
+        return hasHeatedSeats;
     }
 
-    public void setHas_sunroof(Boolean has_sunroof) {
-        this.has_sunroof = has_sunroof;
+    public void setHasHeatedSeats(Boolean hasHeatedSeats) {
+        this.hasHeatedSeats = hasHeatedSeats;
     }
 
-    public Boolean getHas_ventilated_seats() {
-        return has_ventilated_seats;
+    public Boolean getHasVentilatedSeats() {
+        return hasVentilatedSeats;
     }
 
-    public void setHas_ventilated_seats(Boolean has_ventilated_seats) {
-        this.has_ventilated_seats = has_ventilated_seats;
+    public void setHasVentilatedSeats(Boolean hasVentilatedSeats) {
+        this.hasVentilatedSeats = hasVentilatedSeats;
     }
 
-    public Boolean getHas_panorama_roof() {
-        return has_panorama_roof;
+    public Boolean getHasSunroof() {
+        return hasSunroof;
     }
 
-    public void setHas_panorama_roof(Boolean has_panorama_roof) {
-        this.has_panorama_roof = has_panorama_roof;
+    public void setHasSunroof(Boolean hasSunroof) {
+        this.hasSunroof = hasSunroof;
     }
 
-    public Boolean getHas_keyless_entry() {
-        return has_keyless_entry;
+    public Boolean getHasPanoramaRoof() {
+        return hasPanoramaRoof;
     }
 
-    public void setHas_keyless_entry(Boolean has_keyless_entry) {
-        this.has_keyless_entry = has_keyless_entry;
+    public void setHasPanoramaRoof(Boolean hasPanoramaRoof) {
+        this.hasPanoramaRoof = hasPanoramaRoof;
     }
 
-    public Boolean getHas_push_start() {
-        return has_push_start;
+    public Boolean getHasKeylessEntry() {
+        return hasKeylessEntry;
     }
 
-    public void setHas_push_start(Boolean has_push_start) {
-        this.has_push_start = has_push_start;
+    public void setHasKeylessEntry(Boolean hasKeylessEntry) {
+        this.hasKeylessEntry = hasKeylessEntry;
     }
 
-    public Boolean getHas_alloy_wheels() {
-        return has_alloy_wheels;
+    public Boolean getHasPushStart() {
+        return hasPushStart;
     }
 
-    public void setHas_alloy_wheels(Boolean has_alloy_wheels) {
-        this.has_alloy_wheels = has_alloy_wheels;
+    public void setHasPushStart(Boolean hasPushStart) {
+        this.hasPushStart = hasPushStart;
     }
 
-    public Boolean getHas_abs() {
-        return has_abs;
+    public Boolean getHasAlloyWheels() {
+        return hasAlloyWheels;
     }
 
-    public void setHas_abs(Boolean has_abs) {
-        this.has_abs = has_abs;
+    public void setHasAlloyWheels(Boolean hasAlloyWheels) {
+        this.hasAlloyWheels = hasAlloyWheels;
+    }
+
+    public Boolean getHasAbs() {
+        return hasAbs;
+    }
+
+    public void setHasAbs(Boolean hasAbs) {
+        this.hasAbs = hasAbs;
+    }
+
+    public Boolean getHasEsp() {
+        return hasEsp;
+    }
+
+    public void setHasEsp(Boolean hasEsp) {
+        this.hasEsp = hasEsp;
     }
 
     public String getDescription() {
@@ -335,27 +352,19 @@ public class Car {
         this.description = description;
     }
 
-    public Boolean getHas_esp() {
-        return has_esp;
+    public Timestamp getCreatedAt() {
+        return createdAt;
     }
 
-    public void setHas_esp(Boolean has_esp) {
-        this.has_esp = has_esp;
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public Timestamp getCreated_at() {
-        return created_at;
+    public Timestamp getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setCreated_at(Timestamp created_at) {
-        this.created_at = created_at;
-    }
-
-    public Timestamp getUpdated_at() {
-        return updated_at;
-    }
-
-    public void setUpdated_at(Timestamp updated_at) {
-        this.updated_at = updated_at;
+    public void setUpdatedAt(Timestamp updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

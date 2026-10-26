@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en"
+      th:fragment="layout(content)"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+    <title>CarSales</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+<header class="navbar">
+    <div class="nav-inner">
+
+        <a class="brand" th:href="@{/}">
+            <span class="brand-mark">C</span>
+            CarSales
+        </a>
+
+        <nav class="nav-actions">
+
+            <th:block sec:authorize="isAnonymous()">
+                <a class="btn btn-secondary" th:href="@{/login}">Log in</a>
+                <a class="btn btn-primary" th:href="@{/signup}">Sign up</a>
+            </th:block>
+
+            <th:block sec:authorize="isAuthenticated()">
+                <a class="btn btn-primary" th:href="@{/cars/new}">+ Post a car</a>
+
+                <span class="nav-username"
+                      th:text="${displayUsername} ?: 'My account'">
+                    Username
+                </span>
+
+                <form method="post" th:action="@{/logout}">
+                    <button class="btn btn-secondary" type="submit">Log out</button>
+                </form>
+            </th:block>
+
+        </nav>
+    </div>
+</header>
+
+<main>
+    <th:block th:replace="${content}"></th:block>
+</main>
+
+<footer class="site-footer">
+    <div class="footer-inner">
+        <a class="brand" th:href="@{/}">CarSales</a>
+        <p>Find the car that moves you.</p>
+        <p>&copy; CarSales</p>
+    </div>
+</footer>
+
+</body>
+</html>

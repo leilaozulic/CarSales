@@ -22,6 +22,7 @@ public class EmailService {
     }
 
     public void sendVerificationEmail(String to, String token) {
+        //reverse routing ??
         String verificationUrl =
                 "http://localhost:8080/verify-email?token=" + token;
 

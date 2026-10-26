@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en"
+      th:replace="~{fragments/layout :: layout(~{::section})}"
+      xmlns:th="http://www.thymeleaf.org">
+
+<section>
+    <input th:name="${_csrf.parameterName}"
+           th:value="${_csrf.token}"
+           type="hidden">
+    <link rel="stylesheet" th:href="@{/css/post-car.css}">
+
+
+    <main class="post-car-page">
+        <div class="post-car-container">
+
+            <div class="post-car-breadcrumb">
+                <a th:href="@{/}">Home</a>
+                <span>/</span>
+                Post a car
+            </div>
+
+            <header class="post-car-heading">
+                <p class="post-car-eyebrow">AI-powered car listing</p>
+                <h1>Let's start with a few photos.</h1>
+                <p>
+                    Upload pictures of your car and let AI help fill in
+                    the details. You can review and correct everything later.
+                </p>
+            </header>
+
+            <div aria-label="Listing progress" class="post-car-steps">
+                <div class="post-car-step active">
+                    <span class="post-car-step-number">1</span>
+                    <span>Upload photos</span>
+                </div>
+
+                <div class="post-car-step-line"></div>
+
+                <div class="post-car-step">
+                    <span class="post-car-step-number">2</span>
+                    <span>Review details</span>
+                </div>
+
+                <div class="post-car-step-line"></div>
+
+                <div class="post-car-step">
+                    <span class="post-car-step-number">3</span>
+                    <span>Publish listing</span>
+                </div>
+            </div>
+
+            <div class="post-car-layout">
+
+                <div class="post-car-card">
+                    <div class="post-car-card-heading">
+                        <h2>Show us your car</h2>
+                        <p>
+                            Add a few clear photos from different angles.
+                            The more we can see, the better.
+                        </p>
+                    </div>
+
+                    <form id="postCarForm">
+                        <div aria-label="Choose car photos"
+                             class="post-car-upload-area"
+                             id="uploadArea"
+                             role="button"
+                             tabindex="0">
+
+                            <input accept="image/jpeg,image/png,image/webp"
+                                   hidden
+                                   id="carPhotos"
+                                   multiple
+                                   name="photos"
+                                   type="file">
+
+                            <div aria-hidden="true" class="post-car-upload-icon">
+                                <svg fill="none"
+                                     viewBox="0 0 48 48"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <rect height="29" rx="5" stroke="currentColor" stroke-width="2"
+                                          width="38" x="5"
+                                          y="10"/>
+                                    <circle cx="17" cy="20" r="3"
+                                            stroke="currentColor"
+                                            stroke-width="2"/>
+                                    <path d="M7 33L18 24L26 30L32 25L41 33"
+                                          stroke="currentColor"
+                                          stroke-linecap="round"
+                                          stroke-linejoin="round"
+                                          stroke-width="2"/>
+                                    <path d="M24 3V16M19 8L24 3L29 8"
+                                          stroke="currentColor"
+                                          stroke-linecap="round"
+                                          stroke-linejoin="round"
+                                          stroke-width="2"/>
+                                </svg>
+                            </div>
+
+                            <h3>Drop your car photos here</h3>
+                            <p>or <span class="post-car-browse">browse files</span> on your device</p>
+                            <span class="post-car-upload-hint">
+                                JPG, PNG or WEBP · Up to 10 photos · 10 MB each
+                            </span>
+                        </div>
+
+                        <div class="post-car-error"
+                             hidden
+                             id="photoError"
+                             role="alert"></div>
+
+                        <div class="post-car-preview-section"
+                             hidden
+                             id="photoPreviewSection">
+
+                            <div class="post-car-preview-heading">
+                                <div>
+                                    <h3>Your photos</h3>
+                                    <p id="photoCount">0 photos selected</p>
+                                </div>
+
+                                <button class="post-car-text-button"
+                                        id="clearPhotos"
+                                        type="button">
+                                    Remove all
+                                </button>
+                            </div>
+
+                            <div class="post-car-preview-grid"
+                                 id="photoPreviewGrid"></div>
+                        </div>
+
+                        <div class="post-car-field post-car-description">
+                            <label for="description">
+                                Anything else we should know?
+                                <span class="post-car-optional">(optional)</span>
+                            </label>
+
+                            <textarea id="description"
+                                      maxlength="2000"
+                                      name="description"
+                                      placeholder="For example: BMW 530d, 2018, well maintained, full service history, a few scratches on the rear bumper..."
+                                      rows="5"></textarea>
+
+                            <div class="post-car-description-footer">
+                                <span>
+                                    Add any details you already know.
+                                    AI can use this as extra context.
+                                </span>
+                                <span id="descriptionCount">0 / 2000</span>
+                            </div>
+                        </div>
+
+                        <div class="post-car-form-footer">
+                            <span class="post-car-required-note">
+                                Your listing isn't published yet.
+                            </span>
+
+                            <button class="post-car-submit"
+                                    id="analyzeButton"
+                                    type="submit">
+                                Analyze my car
+                                <span aria-hidden="true">→</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <aside class="post-car-sidebar">
+
+                    <div class="post-car-card">
+                        <div class="post-car-card-heading">
+                            <h2>Tips for better results</h2>
+                            <p>
+                                A few useful photos can help identify
+                                your vehicle more accurately.
+                            </p>
+                        </div>
+
+                        <div class="post-car-tip">
+                            <div class="post-car-tip-icon">↗</div>
+                            <div>
+                                <h3>Front and rear</h3>
+                                <p>
+                                    Capture the full car from the front
+                                    and back.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="post-car-tip">
+                            <div class="post-car-tip-icon">◇</div>
+                            <div>
+                                <h3>Side views</h3>
+                                <p>
+                                    Show both sides so the body style
+                                    is easier to identify.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="post-car-tip">
+                            <div class="post-car-tip-icon">◎</div>
+                            <div>
+                                <h3>Interior and details</h3>
+                                <p>
+                                    Dashboard, seats, wheels and other
+                                    details can provide extra clues.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="post-car-note">
+                        <strong>AI assists. You decide.</strong>
+                        <p>
+                            The suggested details will be estimates.
+                            You'll be able to review and correct them
+                            before your listing is published.
+                        </p>
+                    </div>
+
+                </aside>
+            </div>
+        </div>
+    </main>
+
+    <script defer th:src="@{/js/post-car.js}"></script>
+</section>
+</html>

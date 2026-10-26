@@ -19,7 +19,7 @@ public class SignUpService {
     private final VerificationTokenService verificationTokenService;
     private final EmailService emailService;
 
-
+    
     public SignUpService(UserRepository userRepository, PasswordEncoder passwordEncoder, EmailVerificationTokenRepository emailVerificationTokenRepository, VerificationTokenService verificationTokenService, EmailService emailService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -42,6 +42,7 @@ public class SignUpService {
         } else if (userExistsByEmail(email)) {
             return RegistrationStatus.EMAIL_EXISTS;
         }
+
         String hashedPassword = passwordEncoder.encode(password);
         User newUser = new User(username, email, hashedPassword, UserStatus.UNAPPROVED);
         userRepository.save(newUser);

@@ -1,9 +1,6 @@
 package com.example.CarSales.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
 @Entity
 public class Model {
@@ -14,7 +11,8 @@ public class Model {
     private Integer id;
 
     @ManyToOne
-    private Make make_id;
+    @JoinColumn(name = "make_id")
+    private Make make;
     private String name;
 
     public Model() {
@@ -29,11 +27,11 @@ public class Model {
     }
 
     public Make getMake_id() {
-        return make_id;
+        return make;
     }
 
     public void setMake_id(Make make_id) {
-        this.make_id = make_id;
+        this.make = make_id;
     }
 
     public String getName() {
