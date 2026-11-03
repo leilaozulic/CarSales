@@ -20,8 +20,8 @@ public class SecurityConfig {
          */
             throws Exception {
 
-        http
-                .userDetailsService(userDetailsService)
+        http //object used to configure how Spring security should handle incoming requests
+                .userDetailsService(userDetailsService) //tells Spring how to look up a users details when authenticating the user
                 .authorizeHttpRequests(auth -> auth //auth is auth object through which we define auth rules
                         .requestMatchers(                                         //configuring auth rules for HTTP requests
                                 "/",
@@ -35,12 +35,12 @@ public class SecurityConfig {
                         .anyRequest().authenticated()                             // all other requests need to be authenticated
                 )
                 .formLogin(form -> form
-                        .loginPage("/login")
-                        .loginProcessingUrl("/login")
-                        .usernameParameter("email")
-                        .defaultSuccessUrl("/", true)
-                        .failureUrl("/login?error")
-                        .permitAll()
+                        .loginPage("/login") //tells Spring where users can log in
+                        .loginProcessingUrl("/login") //tells Spring when the login form is submitted handle that submission as an authentication attempt
+                        .usernameParameter("email") //tells Spring which form field contains user's login identifier
+                        .defaultSuccessUrl("/", true) // after successful log in redirect here
+                        .failureUrl("/login?error") // if the login was unsuccessful redirect to login again telling the login page to detect an error
+                        .permitAll() // all of these endpoints are permitted without authentication
                 )
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login?logout")

@@ -5,6 +5,7 @@ import jakarta.mail.internet.MimeMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
@@ -22,9 +23,11 @@ public class EmailService {
     }
 
     public void sendVerificationEmail(String to, String token) {
-        //reverse routing ??
-        String verificationUrl =
-                "http://localhost:8080/verify-email?token=" + token;
+        String verificationUrl = ServletUriComponentsBuilder
+                .fromCurrentContextPath()
+                .path("/verify-email")
+                .queryParam("token", token)
+                .toUriString();
 
         // Pass variables to the HTML template
         Context context = new Context();
@@ -38,6 +41,7 @@ public class EmailService {
 
         // Create and send the HTML email
         MimeMessage message = mailSender.createMimeMessage();
+        //MIME -> Multipurpose Internet Mail Extensions
 
         try {
             MimeMessageHelper helper =

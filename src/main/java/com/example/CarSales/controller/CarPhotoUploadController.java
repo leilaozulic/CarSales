@@ -2,6 +2,7 @@ package com.example.CarSales.controller;
 
 import com.example.CarSales.DTOs.UploadedCarPhoto;
 import com.example.CarSales.service.CloudinaryUploadService;
+import com.example.CarSales.service.OpenAIService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,10 +31,14 @@ public class CarPhotoUploadController {
     );
 
     private final CloudinaryUploadService uploadService;
+    private final OpenAIService openAIService;
 
     public CarPhotoUploadController(
-            CloudinaryUploadService uploadService) {
+            CloudinaryUploadService uploadService,
+            OpenAIService openAIService
+    ) {
         this.uploadService = uploadService;
+        this.openAIService = openAIService;
     }
 
     @PostMapping(
@@ -47,14 +52,14 @@ public class CarPhotoUploadController {
         if (photos == null || photos.isEmpty()) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "Please upload at least one photo."
+                    "Please upload at least one photo." //TODO add msg
             );
         }
 
         if (photos.size() > MAX_PHOTOS) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "You can upload a maximum of 10 photos."
+                    "You can upload a maximum of 10 photos."//TODO add msg
             );
         }
 
@@ -64,21 +69,21 @@ public class CarPhotoUploadController {
             if (photo.isEmpty()) {
                 throw new ResponseStatusException(
                         HttpStatus.BAD_REQUEST,
-                        "One of the uploaded files is empty."
+                        "One of the uploaded files is empty."//TODO add msg
                 );
             }
 
             if (photo.getSize() > MAX_FILE_SIZE) {
                 throw new ResponseStatusException(
                         HttpStatus.BAD_REQUEST,
-                        "Each photo must be 10 MB or smaller."
+                        "Each photo must be 10 MB or smaller."//TODO add msg
                 );
             }
 
             if (!ALLOWED_TYPES.contains(photo.getContentType())) {
                 throw new ResponseStatusException(
                         HttpStatus.BAD_REQUEST,
-                        "Only JPEG, PNG, and WEBP images are allowed."
+                        "Only JPEG, PNG, and WEBP images are allowed."//TODO add msg
                 );
             }
 

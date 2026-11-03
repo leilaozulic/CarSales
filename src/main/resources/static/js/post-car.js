@@ -9,8 +9,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const description = document.getElementById("description");
     const descriptionCount = document.getElementById("descriptionCount");
     const postCarForm = document.getElementById("postCarForm");
+    const submitButton = document.getElementById("analyzeButton");
 
-    if (!uploadArea || !fileInput) {
+    const vehicleFormSection = document.getElementById("vehicleFormSection");
+    const vehicleDetailsForm = document.getElementById("vehicleDetailsForm");
+    const vehicleFormError = document.getElementById("vehicleFormError");
+
+    // Database-backed dropdowns.
+    const makeSelect = document.getElementById("make");
+    const modelSelect = document.getElementById("model");
+    const colorSelect = document.getElementById("exteriorColor");
+
+    if (!uploadArea || !fileInput || !postCarForm || !submitButton) {
+        console.error("Required car upload elements are missing.");
         return;
     }
 
@@ -20,6 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let selectedFiles = [];
     let previewUrls = [];
+    let isSubmitting = false;
 
     function showError(message) {
         photoError.textContent = message;
@@ -34,6 +46,12 @@ document.addEventListener("DOMContentLoaded", () => {
     function releasePreviewUrls() {
         previewUrls.forEach((url) => URL.revokeObjectURL(url));
         previewUrls = [];
+    }
+
+    function syncFileInput() {
+        const transfer = new DataTransfer();
+        selectedFiles.forEach((file) => transfer.items.add(file));
+        fileInput.files = transfer.files;
     }
 
     function renderPreviews() {
@@ -55,12 +73,11 @@ document.addEventListener("DOMContentLoaded", () => {
             removeButton.type = "button";
             removeButton.className = "post-car-preview-remove";
             removeButton.textContent = "×";
-            removeButton.setAttribute(
-                "aria-label",
-                `Remove ${file.name}`
-            );
+            removeButton.setAttribute("aria-label", `Remove ${file.name}`);
 
             removeButton.addEventListener("click", () => {
+                if (isSubmitting) return;
+
                 selectedFiles.splice(index, 1);
                 clearError();
                 syncFileInput();
@@ -78,18 +95,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const count = selectedFiles.length;
         photoCount.textContent =
             `${count} photo${count === 1 ? "" : "s"} selected`;
-
         previewSection.hidden = count === 0;
     }
 
-    function syncFileInput() {
-        const transfer = new DataTransfer();
-
-        selectedFiles.forEach((file) => transfer.items.add(file));
-        fileInput.files = transfer.files;
-    }
-
     function addFiles(fileList) {
+        if (isSubmitting) return;
+
         clearError();
 
         const incomingFiles = Array.from(fileList);
@@ -98,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         for (const file of incomingFiles) {
             if (!ALLOWED_TYPES.includes(file.type)) {
-                errors.push(`${file.name}: use JPG, PNG, or WEBP.`);
+                errors.push(`${file.name}: use JPG, PNG or WEBP.`);
                 continue;
             }
 
@@ -107,21 +118,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 continue;
             }
 
-            const alreadySelected = selectedFiles.some(
+            const isDuplicate = [...selectedFiles, ...validFiles].some(
                 (existing) =>
                     existing.name === file.name &&
                     existing.size === file.size &&
                     existing.lastModified === file.lastModified
             );
 
-            const alreadyIncoming = validFiles.some(
-                (existing) =>
-                    existing.name === file.name &&
-                    existing.size === file.size &&
-                    existing.lastModified === file.lastModified
-            );
-
-            if (!alreadySelected && !alreadyIncoming) {
+            if (!isDuplicate) {
                 validFiles.push(file);
             }
         }
@@ -132,26 +136,26 @@ document.addEventListener("DOMContentLoaded", () => {
             errors.push(`You can upload up to ${MAX_PHOTOS} photos.`);
         }
 
-        selectedFiles.push(...validFiles.slice(0, availableSlots));
+        selectedFiles.push(
+            ...validFiles.slice(0, Math.max(0, availableSlots))
+        );
 
-        if (errors.length > 0) {
-            showError(errors.join(" "));
-        }
+        if (errors.length) showError(errors.join(" "));
 
         syncFileInput();
         renderPreviews();
     }
 
     uploadArea.addEventListener("click", (event) => {
-        if (event.target.closest("button")) {
-            return;
-        }
-
+        if (event.target.closest("button")) return;
         fileInput.click();
     });
 
     uploadArea.addEventListener("keydown", (event) => {
-        if (event.key === "Enter" || event.key === " ") {
+        if (
+            event.target === uploadArea &&
+            (event.key === "Enter" || event.key === " ")
+        ) {
             event.preventDefault();
             fileInput.click();
         }
@@ -159,6 +163,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     fileInput.addEventListener("change", () => {
         addFiles(fileInput.files);
+        // Allow selecting the same file again after removing it.
+        fileInput.value = "";
+        syncFileInput();
     });
 
     ["dragenter", "dragover"].forEach((eventName) => {
@@ -182,6 +189,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     clearPhotosButton.addEventListener("click", () => {
+        if (isSubmitting) return;
+
         selectedFiles = [];
         clearError();
         syncFileInput();
@@ -193,9 +202,183 @@ document.addEventListener("DOMContentLoaded", () => {
             `${description.value.length} / 2000`;
     });
 
+    async function readErrorMessage(response) {
+        const body = await response.json().catch(() => null);
+
+        return body?.detail ||
+            body?.message ||
+            body?.error ||
+            `Request failed (HTTP ${response.status}).`;
+    }
+
+    function getCsrfHeaders() {
+        const token = document.querySelector('input[name="_csrf"]')?.value;
+        const headerName =
+            document.querySelector('meta[name="_csrf_header"]')?.content;
+
+        const headers = {};
+
+        if (token) {
+            headers[headerName || "X-CSRF-TOKEN"] = token;
+        }
+
+        return headers;
+    }
+
+    function setFieldValue(id, value) {
+        const field = document.getElementById(id);
+
+        if (!field || value === null || value === undefined || value === "") {
+            return;
+        }
+
+        field.value = String(value);
+    }
+
+    function setSelectValue(id, value) {
+        const field = document.getElementById(id);
+
+        if (!field || value === null || value === undefined || value === "") {
+            return;
+        }
+
+        const wanted = String(value).trim().toLowerCase();
+
+        const matchingOption = Array.from(field.options).find(
+            (option) =>
+                option.value.trim().toLowerCase() === wanted
+        );
+
+        if (matchingOption) {
+            field.value = matchingOption.value;
+        }
+    }
+
+    // Find an option by its displayed text or its value.
+    function selectOptionByText(selectElement, value) {
+        if (!selectElement || value === null || value === undefined || value === "") {
+            return false;
+        }
+
+        const wanted = String(value).trim().toLowerCase();
+
+        const matchingOption = Array.from(selectElement.options).find(
+            (option) =>
+                option.textContent.trim().toLowerCase() === wanted ||
+                option.value.trim().toLowerCase() === wanted
+        );
+
+        if (!matchingOption) {
+            return false;
+        }
+
+        selectElement.value = matchingOption.value;
+        return true;
+    }
+
+    // Load models belonging to the selected make.
+    async function loadModels(makeId, selectedModelName = "") {
+        modelSelect.replaceChildren();
+
+        modelSelect.add(new Option("Loading models...", ""));
+        modelSelect.disabled = true;
+
+        if (!makeId) {
+            modelSelect.replaceChildren();
+            modelSelect.add(new Option("Select make first", ""));
+            return;
+        }
+
+        try {
+            const response = await fetch(
+                `/cars/models/${encodeURIComponent(makeId)}`
+            );
+
+            if (!response.ok) {
+                throw new Error(await readErrorMessage(response));
+            }
+
+            const models = await response.json();
+
+            modelSelect.replaceChildren();
+            modelSelect.add(new Option("Select model", ""));
+
+            models.forEach((model) => {
+                modelSelect.add(
+                    new Option(model.name, model.id)
+                );
+            });
+
+            modelSelect.disabled = models.length === 0;
+
+            if (models.length === 0) {
+                modelSelect.replaceChildren();
+                modelSelect.add(new Option("No models available", ""));
+                return;
+            }
+
+            // If AI supplied a model name, select the matching option.
+            if (selectedModelName) {
+                selectOptionByText(modelSelect, selectedModelName);
+            }
+
+        } catch (error) {
+            console.error("Could not load car models:", error);
+
+            modelSelect.replaceChildren();
+            modelSelect.add(new Option("Could not load models", ""));
+            modelSelect.disabled = true;
+
+            throw error;
+        }
+    }
+
+    // When a user manually changes the make, load its models.
+    makeSelect.addEventListener("change", async () => {
+        await loadModels(makeSelect.value);
+    });
+
+    // Populate the form with AI results.
+    async function populateVehicleForm(result) {
+
+        // Match AI make name to an existing database option.
+        const makeFound = selectOptionByText(makeSelect, result.make);
+
+        // Load models for that make before selecting the AI model.
+        if (makeFound) {
+            await loadModels(makeSelect.value, result.model);
+        } else {
+            modelSelect.replaceChildren();
+            modelSelect.add(new Option("Select make first", ""));
+            modelSelect.disabled = true;
+        }
+
+        setFieldValue("year", result.year);
+
+        // These fields still use their existing option values.
+        setSelectValue("bodyType", result.bodyType);
+        setSelectValue("fuelType", result.fuelType);
+        setSelectValue("transmission", result.transmission);
+
+        // Match AI colour to an existing database option.
+        selectOptionByText(colorSelect, result.exteriorColor);
+
+        setFieldValue("engineSize", result.engineSize);
+        setFieldValue("enginePowerHp", result.enginePowerHp);
+        setFieldValue("aiNotes", result.notes);
+
+        vehicleFormSection.hidden = false;
+        vehicleFormSection.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }
 
     postCarForm.addEventListener("submit", async (event) => {
         event.preventDefault();
+
+        if (isSubmitting) return;
+
         clearError();
 
         if (selectedFiles.length === 0) {
@@ -203,71 +386,107 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        const formData = new FormData();
-
-        selectedFiles.forEach((file) => {
-            formData.append("photos", file);
-        });
-
-        const submitButton = postCarForm.querySelector(
-            'button[type="submit"]'
-        );
-
-        const originalButtonText = submitButton.textContent;
-
+        isSubmitting = true;
         submitButton.disabled = true;
-        submitButton.textContent = "Uploading photos...";
+
+        const originalButtonText = submitButton.innerHTML;
+        let photosUploaded = false;
 
         try {
-            const csrfToken = document.querySelector(
-                'input[name="_csrf"]'
-            )?.value;
+            // STEP 1: Upload photos to Cloudinary.
+            submitButton.textContent = "Uploading photos...";
 
-            const csrfHeader = document.querySelector(
-                'meta[name="_csrf_header"]'
-            )?.content;
+            const formData = new FormData();
+            selectedFiles.forEach((file) => {
+                formData.append("photos", file);
+            });
 
-            const headers = {};
-
-            if (csrfToken && csrfHeader) {
-                headers[csrfHeader] = csrfToken;
-            }
-
-            const response = await fetch("/api/car-photos/upload", {
+            const uploadResponse = await fetch("/api/car-photos/upload", {
                 method: "POST",
-                headers,
+                headers: getCsrfHeaders(),
                 body: formData
             });
 
-            if (!response.ok) {
-                const errorBody = await response.json().catch(() => null);
-
-                throw new Error(
-                    errorBody?.detail ||
-                    errorBody?.message ||
-                    "The photos could not be uploaded. Please try again."
-                );
+            if (!uploadResponse.ok) {
+                throw new Error(await readErrorMessage(uploadResponse));
             }
 
-            const uploadedPhotos = await response.json();
+            const uploadedPhotos = await uploadResponse.json();
 
-            console.log("Uploaded car photos:", uploadedPhotos);
+            if (!Array.isArray(uploadedPhotos) || uploadedPhotos.length === 0) {
+                throw new Error("No uploaded photo URLs were returned.");
+            }
 
-            alert(
-                `Success! ${uploadedPhotos.length} photo(s) uploaded to Cloudinary.`
-            );
+            const imageUrls = uploadedPhotos.map((photo) => photo.secureUrl);
+
+            if (imageUrls.some((url) => typeof url !== "string" || !url.trim())) {
+                throw new Error("An uploaded photo is missing its secure URL.");
+            }
+
+            photosUploaded = true;
+
+            // STEP 2: Ask AI for structured vehicle details.
+            submitButton.textContent = "Analyzing your car...";
+
+            const analysisResponse = await fetch("/api/ai/analyse-car", {
+                method: "POST",
+                headers: {
+                    ...getCsrfHeaders(),
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    imageUrls,
+                    description: description.value.trim()
+                })
+            });
+
+            if (!analysisResponse.ok) {
+                throw new Error(await readErrorMessage(analysisResponse));
+            }
+
+            const result = await analysisResponse.json();
+
+            if (!result || typeof result !== "object") {
+                throw new Error("The AI returned an invalid response.");
+            }
+
+            // STEP 3: Populate the editable form.
+            await populateVehicleForm(result);
 
         } catch (error) {
-            console.error("Photo upload failed:", error);
+            console.error("Car analysis failed:", error);
+
             showError(
-                error.message || "Something went wrong while uploading."
+                photosUploaded
+                    ? `Photos uploaded, but analysis failed: ${error.message}`
+                    : error.message || "The photo upload failed."
             );
         } finally {
+            isSubmitting = false;
             submitButton.disabled = false;
-            submitButton.textContent = originalButtonText;
+            submitButton.innerHTML = originalButtonText;
         }
     });
 
+    // This form is for review only; saving will be implemented separately.
+    vehicleDetailsForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        vehicleFormError.hidden = true;
+        vehicleFormError.textContent = "";
+
+        if (!vehicleDetailsForm.reportValidity()) {
+            return;
+        }
+
+        vehicleFormError.textContent =
+            "Your details are ready for the next step. Saving the listing has not been connected yet.";
+        vehicleFormError.hidden = false;
+        vehicleFormError.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+    });
 
     window.addEventListener("beforeunload", releasePreviewUrls);
 });

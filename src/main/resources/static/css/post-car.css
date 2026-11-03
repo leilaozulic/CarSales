@@ -531,4 +531,177 @@
     .post-car-submit {
         width: 100%;
     }
+
+
+    /* Compact car photo previews */
+    #photoPreviewGrid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 14px;
+        margin-top: 16px;
+    }
+
+    .post-car-preview-item {
+        position: relative;
+        min-width: 0;
+        overflow: hidden;
+        border: 1px solid var(--car-border, #e3e8e3);
+        border-radius: 12px;
+        background: #f6f7f4;
+    }
+
+    .post-car-preview-item img {
+        display: block;
+        width: 100%;
+        height: 130px;
+        object-fit: contain;
+        background: #f0f1ee;
+    }
+
+    .post-car-preview-name {
+        overflow: hidden;
+        padding: 8px 10px;
+        font-size: 12px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .post-car-preview-remove {
+        position: absolute;
+        top: 7px;
+        right: 7px;
+        display: grid;
+        place-items: center;
+        width: 30px;
+        height: 30px;
+        border: 0;
+        border-radius: 50%;
+        background: rgba(25, 35, 28, 0.85);
+        color: white;
+        font-size: 21px;
+        cursor: pointer;
+    }
+
+    #analysisSection {
+        margin-top: 24px;
+    }
+
+    .post-car-description-field {
+        margin-top: 28px;
+    }
+
+    .post-car-description-field label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+    }
+
+    .post-car-description-field label span {
+        color: var(--car-muted, #778078);
+        font-weight: 400;
+    }
+
+    .post-car-description-field textarea {
+        box-sizing: border-box;
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid #dce2dc;
+        border-radius: 9px;
+        font: inherit;
+        resize: vertical;
+    }
+
+    .post-car-upload-area {
+        padding: 28px 18px;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .post-car-upload-area.drag-over {
+        border-color: var(--car-primary, #244c3a);
+        background: #edf3ed;
+    }
+
+    @media (max-width: 520px) {
+        #photoPreviewGrid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .post-car-preview-item img {
+            height: 110px;
+        }
+    }
+
+
+    /* Vehicle details form */
+    .post-car-form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+        margin-top: 24px;
+    }
+
+    .post-car-field {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        min-width: 0;
+    }
+
+    .post-car-field label {
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .post-car-field input,
+    .post-car-field select,
+    .post-car-field textarea {
+        box-sizing: border-box;
+        width: 100%;
+        min-width: 0;
+        padding: 12px 14px;
+        border: 1px solid #dce2dc;
+        border-radius: 9px;
+        background: #fff;
+        color: #202820;
+        font: inherit;
+    }
+
+    .post-car-field input:focus,
+    .post-car-field select:focus,
+    .post-car-field textarea:focus {
+        outline: 2px solid #24523d;
+        outline-offset: 1px;
+    }
+
+    .post-car-full-width {
+        margin-top: 24px;
+    }
+
+    .post-car-help {
+        margin: 0;
+        color: #778078;
+        font-size: 13px;
+    }
+
+    #vehicleFormSection {
+        margin-top: 24px;
+    }
+
+    #vehicleFormSection[hidden] {
+        display: none;
+    }
+
+    #vehicleFormError {
+        margin-top: 20px;
+    }
+
+    @media (max-width: 600px) {
+        .post-car-form-grid {
+            grid-template-columns: minmax(0, 1fr);
+            gap: 16px;
+        }
+    }
+
+    
 }

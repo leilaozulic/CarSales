@@ -229,10 +229,10 @@ VALUES
     -- "Skoda" already represents the brand at make ID 14.
 
     -- Tesla
-    (149, 20, 'Model 3'),
-    (150, 20, 'Model S'),
-    (151, 20, 'Model X'),
-    (152, 20, 'Model Y'),
+    (149, 20, 'CarModel 3'),
+    (150, 20, 'CarModel S'),
+    (151, 20, 'CarModel X'),
+    (152, 20, 'CarModel Y'),
 
     -- Nissan
     (153, 21, 'Micra'),

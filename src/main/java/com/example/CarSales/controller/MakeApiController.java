@@ -1,6 +1,6 @@
 package com.example.CarSales.controller;
 
-import com.example.CarSales.repository.ModelRepository;
+import com.example.CarSales.repository.CarModelRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,9 +12,9 @@ import java.util.List;
 @RequestMapping("/api/makes")
 public class MakeApiController {
 
-    private final ModelRepository modelRepository;
+    private final CarModelRepository modelRepository;
 
-    public MakeApiController(ModelRepository modelRepository) {
+    public MakeApiController(CarModelRepository modelRepository) {
         this.modelRepository = modelRepository;
     }
 

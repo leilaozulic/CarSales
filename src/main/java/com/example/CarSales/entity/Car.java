@@ -20,7 +20,7 @@ public class Car {
 
     @ManyToOne
     @JoinColumn(name = "model_id")
-    private Model model;
+    private CarModel model;
 
     @ManyToOne
     @JoinColumn(name = "color_id")
@@ -80,11 +80,11 @@ public class Car {
         this.id = id;
     }
 
-    public Model getModel() {
+    public CarModel getModel() {
         return model;
     }
 
-    public void setModel(Model model) {
+    public void setModel(CarModel model) {
         this.model = model;
     }
 
